@@ -28,22 +28,15 @@ class Dish:
             result = result and is_word_alpha
         
         return result
-            
-    
-    
+              
     
 dishes_string = input('What would you like?(Use comma to separate) ')  
- 
- 
 dishes_list = re.split(',+', dishes_string)
- 
 dishes_set = {dish.strip().title() for dish in dishes_list}
  
 # creating list of class Dishes
 dishes = [Dish(dish) if (dish and Dish(dish).is_valid_name()) else None
 for dish in dishes_set]
- 
- 
  
 # printing list of class Dishes
 print('\nDish                     Time for cooking')
