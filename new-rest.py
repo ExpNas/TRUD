@@ -1,5 +1,6 @@
 import random
 import re
+valid_chars = " '-+"
 
 class Serving:
     def __init__(self,name):
@@ -8,55 +9,53 @@ class Serving:
         
     def calc_time(self):
         return random.randint(0, 50)
-
+    
     def to_print(self):
-        print('{0}{1}{2}{3}minutes'.format(self.name,
-                                           (31 - self.name.__len__())*'.',
-                                           self.time,
-                                           ((3 - int(len(str(self.time))))*' ')))
+        print('{0}{1}{2}{3}minutes'.format(self.name, (31 - self.name.__len__())*'.', self.time, ((3 - int(len(str(self.time))))*' ')))
+        
+    def is_valid_name(self):
+        for word in ''.join([w for w in list(self.name) if not w in valid_chars]).split():
+            if not word.isalpha():
+                return False
+        return True
 
 
 class Dish(Serving):
-    def to_print(self):
-        print('\nDish                     Time for cooking')
-        super.to_print()
-    
-    def is_valid_name(self):
-        is_valid = []
-        for word in self.name.split("'"):
-            for subword in word.split('-'):
-                for sub_subword in subword.split('+'):
-                    is_valid.append(sub_subword.strip().isalpha())  # [True, False, True, True]
-        
-        result = True
-        for is_word_alpha in is_valid:
-            result = result and is_word_alpha
-        
-        return result
+    pass
   
   
 class Drink(Serving):
     def __init__(self,name):
-        super.__init__(name)
+        super().__init__(name)
         self.time = 5
+
     
-    def to_print(self):
-        print('\nDish                     Time for cooking')
-        super.to_print()
+def wwyl(item):
+    dishes_string = input(f'What would you like to {data[item]}?(Use comma to separate) ')  
+    dishes_list = re.split(',+', dishes_string)
+    dishes_set = {dish.strip().title() for dish in dishes_list}
+    try:
+        my_class = eval(item)
+    except NameError:
+        my_class = type(item, (Dish,), {})
     
-    
-dishes_string = input('What would you like?(Use comma to separate) ')  
-dishes_list = re.split(',+', dishes_string)
-dishes_set = {dish.strip().title() for dish in dishes_list}
- 
-# creating list of class Dishes
-dishes = [Dish(dish) if (dish and Dish(dish).is_valid_name()) else None
-for dish in dishes_set]
- 
-# printing list of class Dishes
-print('\nDish                     Time for cooking')
-for dish in dishes:
-    if dish:
-        super.to_print()
+    # creating list of class Dishes
+    dishes = [my_class(dish) for dish in dishes_set if (dish and my_class(dish).is_valid_name())]
+     
+    # printing list of class Dishes
+    print('\n%s                     Time for cooking' % item)
+    for dish in dishes:
+        dish.to_print()
+    print('\n')
             
     
+data = {'Dish':'eat',
+ #       'Drink':'drink',
+ #       'Snack':'crunch',
+        'Alcohol':'buzz',
+ #       'Song':'sing',
+ #       'Taxi':'go to'
+        }
+    
+for item in data:
+    wwyl(item)    
